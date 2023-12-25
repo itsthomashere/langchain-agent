@@ -5,30 +5,42 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import initialize_agent
 from answer_questions import answer_question
 
+st.title("Langchain Agent")
+
 # define LLM
 llm = ChatOpenAI(
-  temperature=0, 
-  model="gpt-4", 
-  max_tokens=1000, 
-  openai_api_key=st.secrets["OPENAI_API_KEY"]
-  )
+    temperature=0, 
+    model="gpt-4", 
+    max_tokens=1000, 
+    openai_api_key=st.secrets["OPENAI_API_KEY"]
+    )
 
 # define tools
 tools = [
   Tool(
-    name="Readwise Reading Summarizer",
+    name="Indigenous Narratives & Opioid Crisis Analyzer",
     description=
-    "Useful for questions about books, concepts, ideas, definitions of terms, and more. A tool that can summarize the answers to questions from a user's Readwise book, article, and paper highlights. Please provide a full question.",
+    "Specialized for insights into the disproportionate impact of the opioid crisis on First Nations communities, the science of storytelling, and related research in Canada and America. This tool distills answers from a vast collection of PDFs and texts, focusing predominantly on First Nations narratives and opioid-related studies. Provide a comprehensive question for targeted summaries from your extensive body of research material.",
     func=lambda q: str(answer_question(q)),
     return_direct=True)
-]
+    ]
 
 # instantiate memory
 memory = ConversationBufferMemory(memory_key="chat_history")
 
 # initialize agent
-agent_chain = initialize_agent(tools,
-                               llm,
-                               agent="conversational-react-description",
-                               memory=memory)
+agent_chain = initialize_agent(
+    tools,
+    llm,
+    agent="conversational-react-description",
+    memory=memory
+)
 
+if query := st.chat_input(
+    "Ask a question about the opioid crisis and First Nations communities."
+):
+    with st.chat_message(name="user"):
+        st.write(query)
+
+    with st.chat_message(name="assistant"):
+        st.write(agent_chain(query))
