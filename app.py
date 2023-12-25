@@ -27,7 +27,6 @@ title = st.markdown(
     f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
 )
 
-st.write("Provide me with overdose statistics related to first nations people in Canada.")
 
 @st.cache_resource
 def llm_chain_response():
