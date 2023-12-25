@@ -9,9 +9,9 @@ try:
         StorageContext.from_defaults(persist_dir="storage"))
 except ValueError:
     st.info("Please refresh the page.", icon="♻️")
-    st.stop()
+
 # make the knowledge base into a query engine—an object that queries can be run on
-query_engine = index.as_query_engine(streaming=True)
+query_engine = index.as_query_engine()
 
 # Configure retriever
 retriever = VectorIndexRetriever(
