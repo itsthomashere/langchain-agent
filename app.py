@@ -1,10 +1,17 @@
 import streamlit as st
-from langchain.agents import Tool
-from langchain.chains.conversation.memory import ConversationBufferMemory
-from langchain.chat_models import ChatOpenAI
-from langchain.agents import initialize_agent
-from answer_questions import answer_question
 
+from langchain.chat_models import ChatOpenAI
+from langchain.agents import Tool, initialize_agent
+from langchain.prompts import (
+    ChatPromptTemplate,
+    MessagesPlaceholder,
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+)
+from langchain.chains import LLMChain
+from langchain.chains.conversation.memory import ConversationBufferMemory
+
+from answer_questions import answer_question
 
 def display_message(role: str, content: str) -> None:
     with st.chat_message(role):
@@ -13,16 +20,6 @@ def display_message(role: str, content: str) -> None:
 def append_message_to_session_state(role: str, content: str) -> None:
     """Append a message with role and content to st.session_state.messages."""
     st.session_state.messages.append({"role": role, "content": content})
-
-
-def display_chat_history(messages):
-    for message in memory.chat_memory:
-        if message["speaker"] == "user":
-            with st.chat_message(name="user"):
-                st.write(message["message"])
-        else:
-            with st.chat_message(name="assistant"):
-                st.write(message["message"])
 
 
 if "messages" not in st.session_state:
@@ -44,6 +41,19 @@ llm = ChatOpenAI(
     openai_api_key=st.secrets["OPENAI_API_KEY"]
     )
 
+SYSTEM_PROMPT = """
+Your primary function is now to serve as a knowledgeable assistant in the domain of the opioid crisis's impact on First Nations communities, the science of storytelling, and related research in North America. You are equipped with the 'Indigenous Narratives & Opioid Crisis Analyzer' tool. Your role is to provide accurate and relevant answers to user inquiries, drawing exclusively from a detailed corpus of research materials. It is imperative that your responses remain faithful to the content and context of the provided documents. Prioritize accuracy and relevance in all interactions.
+"""
+# setup prompt
+prompt = ChatPromptTemplate(
+    messages=[
+        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
+        # The `variable_name` here is what must align with memory
+        MessagesPlaceholder(variable_name="chat_history"),
+        HumanMessagePromptTemplate.from_template("{question}")
+    ]
+)
+
 # define tools
 tools = [
   Tool(
@@ -55,7 +65,15 @@ tools = [
     ]
 
 # instantiate memory
-memory = ConversationBufferMemory(memory_key="chat_history")
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+conversation = LLMChain(
+    llm=llm,
+    prompt=prompt,
+    verbose=True,
+    memory=memory
+)
+# memory = ConversationBufferMemory(memory_key="chat_history")
+
 
 # initialize agent
 agent_chain = initialize_agent(
@@ -70,6 +88,7 @@ if query := st.chat_input(
     "Ask a question about the opioid crisis and First Nations communities."
 ):
     append_message_to_session_state("user", query)
+    conversation("user", query)
 
     # with st.chat_message(name="user"):
     #     if query not in st.session_state.messages:
@@ -80,6 +99,7 @@ if query := st.chat_input(
             display_message(message["role"], message["content"])
 
     response = agent_chain(query)
+    conversation("assistant", response["output"])
     append_message_to_session_state("assistant", response["output"])
 
     with st.chat_message(name="assistant"):
