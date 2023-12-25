@@ -5,7 +5,11 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import initialize_agent
 from answer_questions import answer_question
 
-st.title("Langchain Agent")
+title = "Advanced Langchain Agent"
+title = st.markdown(
+    f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
+)
+
 
 # define LLM
 llm = ChatOpenAI(
