@@ -8,6 +8,34 @@ from langchain.chains import LLMChain
 from langchain.chains.conversation.memory import ConversationBufferMemory
 
 from answer_questions import answer_question
+from datetime import datetime
+from sqlalchemy import create_engine, text
+
+def connect_to_table() -> None:
+    """Create 'messages' table in the database."""
+    conn = st.experimental_connection("digitalocean", type="sql")
+    with conn.session as s:
+        # Create the 'messages' table with timestamp, role, and content columns
+        s.execute(text("""
+                    CREATE TABLE IF NOT EXISTS messages (
+                    ID SERIAL PRIMARY KEY,
+                    timestamp TIMESTAMPTZ,
+                    role VARCHAR(9) CHECK (LENGTH(role) >= 4),
+                    content TEXT);"""))
+        s.commit()
+
+def insert_into_table(role: str, content: str) -> None:
+    """Save message data to the 'messages' table."""
+    conn = st.experimental_connection("digitalocean", type="sql")
+    
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with conn.session as s:
+        # Insert timestamp, role, and content into 'messages' table
+        s.execute(
+            text('INSERT INTO messages (timestamp, role, content) VALUES (:timestamp, :role, :content);'),
+            params=dict(timestamp=timestamp, role=role, content=content)
+        )
+        s.commit()
 
 
 def display_message(role: str, content: str) -> None:
@@ -101,6 +129,8 @@ customize_streamlit_ui()
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+connect_to_table()
+
 title = "Advanced Langchain Agent"
 title = st.markdown(
     f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
@@ -111,6 +141,7 @@ if query := st.chat_input(
     "Send a message"
 ):
     append_message_to_session_state("user", query)
+    insert_into_table("user", query)
 
     for message in st.session_state.messages:
         if message["role"] != "system":
@@ -124,8 +155,8 @@ if query := st.chat_input(
         st.info("Minor hiccup. Please refresh the page.", icon="♻️")
         st.warning(e)
         st.stop()
-
-    append_message_to_session_state("assistant", response)
-
-    with st.chat_message(name="assistant"):
-        st.write(response)
+    else:
+        append_message_to_session_state("assistant", response)
+        insert_into_table("assistant", response)
+        with st.chat_message(name="assistant"):
+            st.write(response)
