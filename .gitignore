@@ -1,3 +1,4 @@
 .env
 .streamlit/secrets.toml
 pdf_content.xlsx
+~$pdf_content.xlsx
