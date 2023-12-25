@@ -53,6 +53,8 @@ agent_chain = initialize_agent(
     memory=memory
 )
 
+st.write("Provide me with overdose statistics related to first nations people in Canada.")
+
 if query := st.chat_input(
     "Ask a question about the opioid crisis and First Nations communities."
 ):
