@@ -146,6 +146,7 @@ title = st.markdown(
     f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
 )
 
+llm_chain = llm_chain_response()
 
 if query := st.chat_input(
     "Send a message"
@@ -157,7 +158,6 @@ if query := st.chat_input(
         if message["role"] != "system":
             display_message(message["role"], message["content"])
 
-    llm_chain = llm_chain_response()
 
     try:
         with st.spinner("Thinking..."):
