@@ -2,12 +2,8 @@ import streamlit as st
 
 from langchain.chat_models import ChatOpenAI
 from langchain.agents import Tool, initialize_agent
-from langchain.prompts import (
-    ChatPromptTemplate,
-    MessagesPlaceholder,
-    SystemMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-)
+from langchain.prompts import PromptTemplate
+
 from langchain.chains import LLMChain
 from langchain.chains.conversation.memory import ConversationBufferMemory
 
@@ -42,17 +38,20 @@ llm = ChatOpenAI(
     )
 
 SYSTEM_PROMPT = """
-Your primary function is now to serve as a knowledgeable assistant in the domain of the opioid crisis's impact on First Nations communities, the science of storytelling, and related research in North America. You are equipped with the 'Indigenous Narratives & Opioid Crisis Analyzer' tool. Your role is to provide accurate and relevant answers to user inquiries, drawing exclusively from a detailed corpus of research materials. It is imperative that your responses remain faithful to the content and context of the provided documents. Prioritize accuracy and relevance in all interactions.
-"""
+Your primary function is to serve as a knowledgeable assistant in the domain of the opioid crisis's impact on First Nations communities, the science of storytelling, and related research in North America. You are equipped with the 'Indigenous Narratives & Opioid Crisis Analyzer' tool. Your role is to provide accurate and relevant answers to user inquiries, drawing exclusively from a detailed corpus of research materials. It is imperative that your responses remain faithful to the content and context of the provided documents. Prioritize accuracy and relevance in all interactions.
+
+Previous conversation:
+{chat_history}
+
+New human question: {human_input}
+
+Response:"""
+
 # setup prompt
-prompt = ChatPromptTemplate(
-    messages=[
-        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
-        # The `variable_name` here is what must align with memory
-        MessagesPlaceholder(variable_name="chat_history"),
-        HumanMessagePromptTemplate.from_template("{question}")
-    ]
+prompt = PromptTemplate(
+    input_variables=["chat_history", "human_input"], template=SYSTEM_PROMPT
 )
+
 
 # define tools
 tools = [
@@ -65,13 +64,14 @@ tools = [
     ]
 
 # instantiate memory
-memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-conversation = LLMChain(
-    llm=llm,
-    prompt=prompt,
-    verbose=True,
-    memory=memory
-)
+memory = ConversationBufferMemory(memory_key="chat_history")
+# memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+# conversation = LLMChain(
+    # llm=llm,
+    # prompt=prompt,
+    # verbose=True,
+    # memory=memory
+# )
 # memory = ConversationBufferMemory(memory_key="chat_history")
 
 
@@ -80,7 +80,9 @@ agent_chain = initialize_agent(
     tools,
     llm,
     agent="conversational-react-description",
-    memory=memory
+    memory=memory,
+    verbose=True,
+    prompt=prompt
 )
 
 
