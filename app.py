@@ -24,14 +24,17 @@ def display_chat_history(messages):
             with st.chat_message(name="assistant"):
                 st.write(message["message"])
 
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+
 title = "Advanced Langchain Agent"
 title = st.markdown(
     f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
 )
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
+st.write("Provide me with overdose statistics related to first nations people in Canada.")
 
 # define LLM
 llm = ChatOpenAI(
@@ -62,7 +65,6 @@ agent_chain = initialize_agent(
     memory=memory
 )
 
-st.write("Provide me with overdose statistics related to first nations people in Canada.")
 
 if query := st.chat_input(
     "Ask a question about the opioid crisis and First Nations communities."
