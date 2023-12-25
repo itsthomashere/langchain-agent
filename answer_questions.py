@@ -22,7 +22,13 @@ def answer_question(query):
     sources = [node.metadata.get('document_id') for node in retrieved_nodes]
     st.write(sources)
     response = query_engine.query(query)
-    # st.write(response)
+    st.write(response)
+    # format title, page number and score as a string
+    references = """
+    title: {node.node.metadata.get('title')}
+    page: {node.node.metadata.get('page_number')}
+    score: {node.score:.3f}
+    """
     for node in response.source_nodes:
         st.write(f"Title:\t {node.node.metadata.get('title')}")
         st.write(f"Page:\t {node.node.metadata.get('page_number')}")
@@ -39,4 +45,4 @@ def answer_question(query):
     #     st.write(f"Score:\t {node.score:.3f}")
     # # print(response.get_formatted_sources())
 
-    return query_engine.query(query)
+    return str(query_engine.query(query)) + references
