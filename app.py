@@ -71,9 +71,9 @@ if query := st.chat_input(
 ):
     append_message_to_session_state("user", query)
 
-    with st.chat_message(name="user"):
-        if query not in st.session_state.messages:
-            st.write(query)
+    # with st.chat_message(name="user"):
+    #     if query not in st.session_state.messages:
+    #         st.write(query)
 
     for message in st.session_state.messages:
         if message["role"] != "system":
