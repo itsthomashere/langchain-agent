@@ -18,7 +18,8 @@ similarity_top_k=5  # Modify this value to change top K retrievals
 def answer_question(query):
     """Run a query on the query engine."""
     retrieved_nodes = retriever.retrieve(query)
-    response = query_engine.query(query, retrieved_nodes=retrieved_nodes)
+    sources = [node.metadata.get('document_id') for node in retrieved_nodes]
+    response = query_engine.query(query)
     st.write(response)
     # for node in response.source_nodes:
     #     print("-----")
