@@ -8,7 +8,7 @@ try:
     index = load_index_from_storage(
         StorageContext.from_defaults(persist_dir="storage"))
 except ValueError:
-    st.info("Please refresh the page.")
+    st.info("Please refresh the page.", icon="♻️")
     st.stop()
 # make the knowledge base into a query engine—an object that queries can be run on
 query_engine = index.as_query_engine(streaming=True)
@@ -33,9 +33,13 @@ def answer_question(query):
         # st.write(f"Text:\t {text_fmt} ...")
         # st.write(f"Metadata:\t {node.node.metadata}")
     #     # print out the page number and the metadata
-        st.write(f"`\nSource {i}` {node.node.metadata.get('title')}")
-        st.write(f"`Page` {node.node.metadata.get('page_number')}")
-        st.write(f"`Relevance` {node.score * 100:.1f}%")
+        # st.info('This is a purely informational message', icon="ℹ️")
+
+        title = f"`\nSource {i+1}` {node.node.metadata.get('title')}"
+        page = f"`Page` {node.node.metadata.get('page_number')}"
+        percentage = f"`Relevance` {node.score * 100:.1f}%"
+
+        st.info(f"{title}\n{page}\n{percentage}", icon="ℹ️")
     # # print(response.get_formatted_sources())
 
     return response_text
