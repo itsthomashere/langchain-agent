@@ -79,6 +79,18 @@ def llm_chain_response():
         description=
         "Useful for extracting information about Purdue Pharma, the company responsible for the opioid crisis in North America.",
         func=lambda q: str(answer_question(q)),
+        return_direct=True),
+    Tool(
+        name="The mental health of First Nations, Inuit, and Métis peoples",
+        description=
+        "This tool is tailored to offer insights and answers regarding the mental health outcomes of First Nations, Inuit, and Métis peoples in Canada. It's particularly useful for healthcare professionals, researchers, policymakers, and advocates who are looking for in-depth understanding and data on the psychological well-being, challenges, and healthcare strategies affecting these communities. Use this tool to access a curated body of knowledge and foster informed discussions or policy-making.",
+        func=lambda q: str(answer_question(q)),
+        return_direct=True),
+    Tool(
+        name="Indigenous opioid recovery",
+        description=
+        "Useful for healthcare professionals, community advocates, and policymakers seeking to understand and implement practical approaches to opioid recovery, particularly within Indigenous communities. This tool sheds light on community-based opioid agonist treatment (OAT) and the integration of cultural treatment models, highlighting the 'Naandwe Miikan' or The Healing Path program. It offers insights into combining clinical and traditional Indigenous healing practices, enhancing recovery through cultural reconnection and innovative care models.",
+        func=lambda q: str(answer_question(q)),
         return_direct=True)
         ]
 
