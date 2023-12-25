@@ -172,5 +172,5 @@ if query := st.chat_input(
     else:
         append_message_to_session_state("assistant", response)
         insert_into_table("assistant", response)
-        with st.chat_message(name="assistant"):
+        with st.chat_message(name="assistant", avatar="./icons/assistant.png"):
             st.write(response)
