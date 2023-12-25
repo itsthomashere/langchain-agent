@@ -98,7 +98,12 @@ if query := st.chat_input(
             display_message(message["role"], message["content"])
 
     llm_chain = llm_chain_response()
-    response = llm_chain.run(query)
+
+    try:
+        response = llm_chain.run(query)
+    except ValueError:
+        st.info("Minor hiccup. Please refresh the page.", icon="♻️")
+
     append_message_to_session_state("assistant", response)
 
     with st.chat_message(name="assistant"):
