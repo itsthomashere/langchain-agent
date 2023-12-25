@@ -39,7 +39,7 @@ def answer_question(query):
         page = f"`Page` {node.node.metadata.get('page_number')}"
         percentage = f"`Relevance` {node.score * 100:.1f}%"
 
-        st.info(f"{title}\n{page}\n{percentage}", icon="ℹ️")
+        st.toast(f"{title}\n{page}\n{percentage}", icon="ℹ️")
     # # print(response.get_formatted_sources())
 
     return response_text
