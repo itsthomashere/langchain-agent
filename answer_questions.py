@@ -19,12 +19,9 @@ similarity_top_k=5  # Modify this value to change top K retrievals
 def answer_question(query):
     """Run a query on the query engine."""
     retrieved_nodes = retriever.retrieve(query)
-    st.write(dir(retrieved_nodes))
-    st.write(retrieved_nodes.__dict__)
-    st.write(retrieved_nodes[0].__dict__)
     # st.write(retrieved_nodes)
     response = query_engine.query(query)
-    st.write(response)
+    # st.write(response)
     st.write(response.source_nodes[0].get_content())
     for node in response.source_nodes:
     #     print("-----")
@@ -32,9 +29,11 @@ def answer_question(query):
         # st.write(f"Text:\t {text_fmt} ...")
         # st.write(f"Metadata:\t {node.node.metadata}")
     #     # print out the page number and the metadata
-        st.write(f"Title:\t {node.node.metadata.get('title')}")
-        st.write(f"Page:\t {node.node.metadata.get('page_number')}")
-        st.write(f"Score:\t {node.score:.3f}")
+        st.write(f"{node.node.metadata.get('title')}", end=", ")
+        st.write(f"page:\t {node.node.metadata.get('page_number')}", end=", ")
+        st.write(f"score:\t {node.score*100:.3f}%")
+        # st.write(f"score:\t {node.score:.3f}")
+        # score modified to percentage
     # # print(response.get_formatted_sources())
 
     # return query_engine.query(query), reference_list
