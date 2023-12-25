@@ -21,8 +21,9 @@ def answer_question(query):
     retrieved_nodes = retriever.retrieve(query)
     # st.write(retrieved_nodes)
     response = query_engine.query(query)
-    # st.write(response)
-    st.write(response.source_nodes[0].get_content())
+    st.write(response)
+    st.write(response.get_response())
+    # st.write(response.source_nodes[0].get_content())
     for node in response.source_nodes:
     #     print("-----")
     #     text_fmt = node.node.get_content().strip().replace("\n", " ")[:1000]
