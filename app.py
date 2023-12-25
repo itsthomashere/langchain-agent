@@ -6,7 +6,7 @@ from langchain.agents import initialize_agent
 from answer_questions import answer_question
 
 
-def display_chat_history(memory):
+def display_chat_history(messages):
     for message in memory.chat_memory:
         if message["speaker"] == "user":
             with st.chat_message(name="user"):
@@ -19,6 +19,9 @@ title = "Advanced Langchain Agent"
 title = st.markdown(
     f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
 )
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 
 # define LLM
@@ -53,12 +56,18 @@ agent_chain = initialize_agent(
 if query := st.chat_input(
     "Ask a question about the opioid crisis and First Nations communities."
 ):
+    for message in st.session_state.messages:
+            with st.chat_message(name="assistant"):
+                st.write(message)
+
     memory.chat_memory.add_user_message(query)
+    st.session_state.messages.append(query)
     with st.chat_message(name="user"):
         st.write(query)
 
     response = agent_chain(query)
     memory.chat_memory.add_user_message(response)
+    st.session_state.messages.append(response)
 
     with st.chat_message(name="assistant"):
         st.write(response["output"])
