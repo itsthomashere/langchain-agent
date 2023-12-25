@@ -25,6 +25,7 @@ def answer_question(query):
     retrieved_nodes = retriever.retrieve(query)
     # st.write(retrieved_nodes)
     response = query_engine.query(query)
+    st.write(response)
     response_text = response.get_response().response
     st.write(response_text)
     # st.write(response.source_nodes[0].get_content())
