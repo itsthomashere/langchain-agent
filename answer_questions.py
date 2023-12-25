@@ -19,13 +19,9 @@ similarity_top_k=5  # Modify this value to change top K retrievals
 def answer_question(query):
     """Run a query on the query engine."""
     retrieved_nodes = retriever.retrieve(query)
-    for index, node_with_score in enumerate(retrieved_nodes):
-        st.write(f"Item {index}:")
-        # Assuming each item in the list is a dictionary-like object and has a 'node' key
-        node = node_with_score['node']
-        # Iterate over the keys in the dictionary
-        for key in node:
-            st.write(f"  {key}: {node[key]}")
+    st.write(dir(retrieved_nodes))
+    st.write(retrieved_nodes.__dict__)
+    st.write(retrieved_nodes[0].__dict__)
     # st.write(retrieved_nodes)
     response = query_engine.query(query)
     st.write(response)
