@@ -31,7 +31,7 @@ def answer_question(query):
         page = node.node.metadata.get('page_number')
         percentage = f"{node.score * 100:.1f}%"
         if not reference_list:
-            reference_list.append(f"**{title}**, page {page} at {percentage} relevance")
+            reference_list.append(f"**{title}**: page {page} at {percentage} relevance")
         else:
             reference_list.append(f"page {page} at {percentage} relevance.")
         # reference_list.append(f"{title}\n{page}\n{percentage}")
