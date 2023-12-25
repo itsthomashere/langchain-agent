@@ -6,6 +6,15 @@ from langchain.agents import initialize_agent
 from answer_questions import answer_question
 
 
+def display_message(role: str, content: str) -> None:
+    with st.chat_message(role):
+        st.markdown(content)
+
+def append_message_to_session_state(role: str, content: str) -> None:
+    """Append a message with role and content to st.session_state.messages."""
+    st.session_state.messages.append({"role": role, "content": content})
+
+
 def display_chat_history(messages):
     for message in memory.chat_memory:
         if message["speaker"] == "user":
@@ -58,19 +67,17 @@ st.write("Provide me with overdose statistics related to first nations people in
 if query := st.chat_input(
     "Ask a question about the opioid crisis and First Nations communities."
 ):
-    for message in st.session_state.messages:
-            with st.chat_message(name="assistant"):
-                st.write(message)
+    append_message_to_session_state("user", query)
 
-    memory.chat_memory.add_user_message(query)
-    st.write(memory.chat_memory)
-    st.session_state.messages.append(query)
+    for message in st.session_state.messages:
+        if message["role"] != "system":
+            display_message(message["role"], message["content"])
+
     with st.chat_message(name="user"):
         st.write(query)
 
     response = agent_chain(query)
-    # memory.chat_memory.add_user_message(response)
-    st.session_state.messages.append(response)
+    append_message_to_session_state("assistant", response["output"])
 
     with st.chat_message(name="assistant"):
         st.write(response["output"])
