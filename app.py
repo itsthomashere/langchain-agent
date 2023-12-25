@@ -101,8 +101,9 @@ if query := st.chat_input(
 
     try:
         response = llm_chain.run(query)
-    except ValueError:
+    except ValueError as e:
         st.info("Minor hiccup. Please refresh the page.", icon="♻️")
+        st.warning(e)
         st.stop()
 
     append_message_to_session_state("assistant", response)
