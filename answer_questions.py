@@ -20,8 +20,10 @@ def answer_question(query):
     """Run a query on the query engine."""
     retrieved_nodes = retriever.retrieve(query)
     sources = [node.metadata.get('document_id') for node in retrieved_nodes]
+    st.write(sources)
     response = query_engine.query(query)
-    st.write(response.)
+    # st.write(response)
+    for node in response.source_nodes:
         st.write(f"Title:\t {node.node.metadata.get('title')}")
         st.write(f"Page:\t {node.node.metadata.get('page_number')}")
         st.write(f"Score:\t {node.score:.3f}")
