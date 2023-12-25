@@ -167,7 +167,7 @@ if query := st.chat_input(
         st.info("Minor hiccup. Please refresh the page.", icon="♻️")
         st.warning(e)
         st.stop()
-    except openai.RateLimitError:
+    except openai.error.RateLimitError:
         st.info("OpenAI API limit reached. Please wait an hour for it to reset.", icon="⏳")
         st.stop()
     else:
