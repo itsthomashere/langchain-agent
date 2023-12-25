@@ -120,7 +120,7 @@ if query := st.chat_input(
 
     response = agent_chain.run(input=query)
     # response = agent_chain(query)
-    append_message_to_session_state("assistant", response["agent_scratchpad"])
+    append_message_to_session_state("assistant", response)
 
     with st.chat_message(name="assistant"):
         # st.write(response["output"])
