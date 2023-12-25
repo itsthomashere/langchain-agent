@@ -33,9 +33,9 @@ def answer_question(query):
         # st.write(f"Text:\t {text_fmt} ...")
         # st.write(f"Metadata:\t {node.node.metadata}")
     #     # print out the page number and the metadata
-        st.write(f"`\nSource {i}`:\t {node.node.metadata.get('title')}")
-        st.write(f"`Page`:\t {node.node.metadata.get('page_number')}")
-        st.write(f"`Relevance`:\t {node.score:.3f}")
+        st.write(f"`\nSource {i}` {node.node.metadata.get('title')}")
+        st.write(f"`Page` {node.node.metadata.get('page_number')}")
+        st.write(f"`Relevance` {node.score * 100:.1f}%")
     # # print(response.get_formatted_sources())
 
     return response_text
