@@ -141,7 +141,7 @@ if "messages" not in st.session_state:
 
 connect_to_table()
 
-title = "Advanced Langchain Agent"
+title = "Hettie's Research Agent"
 title = st.markdown(
     f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
 )
