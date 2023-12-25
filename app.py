@@ -120,8 +120,8 @@ def llm_chain_response():
 
 def customize_streamlit_ui() -> None:
     st.set_page_config(
-    page_title="Research Assistant",
-    page_icon="⚛",
+    page_title="Hettie's Research Agent",
+    page_icon="🤖",
     layout="centered",
     )
 
