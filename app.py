@@ -57,7 +57,7 @@ def llm_chain_response():
     # define tools
     tools = [
     Tool(
-        name="first nations people and the opioid crisis",
+        name="Fighting the opioid crisis.",
         description="Useful for finding solutions to the opioid health threat among Canadian youth and first nations people.",
         func=lambda q: str(answer_question(q)),
         return_direct=True),
@@ -68,11 +68,17 @@ def llm_chain_response():
         func=lambda q: str(answer_question(q)),
         return_direct=True),
     Tool(
-        name="7 Generations and Indigenous Care",
+        name="Indigenous healthcare services",
         description=
         "This tool is dedicated to exploring integrated healthcare services for Indigenous communities.",
         func=lambda q: str(answer_question(q)),
         return_direct=True),
+    Tool(
+        name="Purdue Pharma",
+        description=
+        "Useful for extracting information about Purdue Pharma, the company responsible for the opioid crisis in North America.",
+        func=lambda q: str(answer_question(q)),
+        return_direct=True)
         ]
 
     # define prompt
