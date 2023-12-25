@@ -30,9 +30,10 @@ def answer_question(query):
         title = node.node.metadata.get('title')
         page = node.node.metadata.get('page_number')
         percentage = f"{node.score * 100:.1f}%"
-        reference_list.append(f"{title}\n{page}\n{percentage}")
+        reference_list.append(f"**{title}**, page {page} at {percentage} relevance.")
+        # reference_list.append(f"{title}\n{page}\n{percentage}")
 
         st.toast(f"{title}\n{page}\n{percentage}", icon="ℹ️")
 
 
-    return response_text + "\n\n" + f"**{title}**, page {page} at {percentage} relevance."
+    return response_text + "\n\n" + "\n".join(reference_list)
