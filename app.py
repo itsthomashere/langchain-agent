@@ -79,6 +79,25 @@ def llm_chain_response():
     )
 
 
+def customize_streamlit_ui() -> None:
+    st.set_page_config(
+    page_title="Research Assistant",
+    page_icon="⚛",
+    layout="centered",
+    )
+
+    hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_st_style, unsafe_allow_html=True)
+
+
+customize_streamlit_ui()
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
