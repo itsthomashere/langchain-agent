@@ -5,6 +5,16 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import initialize_agent
 from answer_questions import answer_question
 
+
+def display_chat_history(memory):
+    for message in memory.chat_memory:
+        if message["speaker"] == "user":
+            with st.chat_message(name="user"):
+                st.write(message["message"])
+        else:
+            with st.chat_message(name="assistant"):
+                st.write(message["message"])
+
 title = "Advanced Langchain Agent"
 title = st.markdown(
     f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
@@ -43,8 +53,12 @@ agent_chain = initialize_agent(
 if query := st.chat_input(
     "Ask a question about the opioid crisis and First Nations communities."
 ):
+    memory.chat_memory.add_user_message(query)
     with st.chat_message(name="user"):
         st.write(query)
 
+    response = agent_chain(query)
+    memory.chat_memory.add_user_message(response)
+
     with st.chat_message(name="assistant"):
-        st.write(agent_chain(query))
+        st.write(response["output"])
