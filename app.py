@@ -9,23 +9,15 @@ from langchain.chains.conversation.memory import ConversationBufferMemory
 
 from answer_questions import answer_question
 
+
 def display_message(role: str, content: str) -> None:
     with st.chat_message(role):
         st.markdown(content)
 
+
 def append_message_to_session_state(role: str, content: str) -> None:
     """Append a message with role and content to st.session_state.messages."""
     st.session_state.messages.append({"role": role, "content": content})
-
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-
-title = "Advanced Langchain Agent"
-title = st.markdown(
-    f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
-)
 
 
 @st.cache_resource
@@ -70,41 +62,25 @@ def llm_chain_response():
         max_tokens=1000, 
         openai_api_key=st.secrets["OPENAI_API_KEY"]
         )
-    
+
     # define memory
     memory = ConversationBufferMemory(memory_key="chat_history")
 
     # define agent
     llm_chain = LLMChain(llm=llm, prompt=prompt)
     agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=True)
-    agent_chain = AgentExecutor.from_agent_and_tools(
+    return AgentExecutor.from_agent_and_tools(
         agent=agent, tools=tools, verbose=True, memory=memory
     )
-    return agent_chain
 
 
-# instantiate memory
-# memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-# conversation = LLMChain(
-    # llm=llm,
-    # prompt=prompt,
-    # verbose=True,
-    # memory=memory
-# )
-# memory = ConversationBufferMemory(memory_key="chat_history")
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-
-
-
-# initialize agent
-# agent_chain = initialize_agent(
-#     tools,
-#     llm,
-#     agent="conversational-react-description",
-#     memory=memory,
-#     verbose=True,
-#     prompt=prompt
-# )
+title = "Advanced Langchain Agent"
+title = st.markdown(
+    f"<h1 style='text-align: center;'>{title}</h1>", unsafe_allow_html=True
+)
 
 
 if query := st.chat_input(
@@ -112,20 +88,13 @@ if query := st.chat_input(
 ):
     append_message_to_session_state("user", query)
 
-    # with st.chat_message(name="user"):
-    #     if query not in st.session_state.messages:
-    #         st.write(query)
-
     for message in st.session_state.messages:
         if message["role"] != "system":
             display_message(message["role"], message["content"])
 
     llm_chain = llm_chain_response()
     response = llm_chain.run(query)
-    # response = agent_chain(query)
     append_message_to_session_state("assistant", response)
 
     with st.chat_message(name="assistant"):
-        # st.write(response["output"])
         st.write(response)
-        # st.write(response["agent_scratchpad"])
