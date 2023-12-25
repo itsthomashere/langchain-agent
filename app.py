@@ -108,7 +108,7 @@ title = st.markdown(
 
 
 if query := st.chat_input(
-    "Send a message:"
+    "Send a message"
 ):
     append_message_to_session_state("user", query)
 
