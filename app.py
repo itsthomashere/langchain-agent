@@ -90,7 +90,6 @@ if query := st.chat_input(
     "Ask a question about the opioid crisis and First Nations communities."
 ):
     append_message_to_session_state("user", query)
-    conversation("user", query)
 
     # with st.chat_message(name="user"):
     #     if query not in st.session_state.messages:
@@ -101,7 +100,6 @@ if query := st.chat_input(
             display_message(message["role"], message["content"])
 
     response = agent_chain(query)
-    conversation("assistant", response["output"])
     append_message_to_session_state("assistant", response["output"])
 
     with st.chat_message(name="assistant"):
