@@ -35,9 +35,9 @@ def answer_question(query):
     #     # print out the page number and the metadata
         # st.info('This is a purely informational message', icon="ℹ️")
 
-        title = f"`\nSource {i+1}` {node.node.metadata.get('title')}"
-        page = f"`Page` {node.node.metadata.get('page_number')}"
-        percentage = f"`Relevance` {node.score * 100:.1f}%"
+        title = f"\n**Source {i+1}** {node.node.metadata.get('title')}"
+        page = f"**Page** {node.node.metadata.get('page_number')}"
+        percentage = f"**Relevance** {node.score * 100:.1f}%"
 
         st.toast(f"{title}\n{page}\n{percentage}", icon="ℹ️")
     # # print(response.get_formatted_sources())
