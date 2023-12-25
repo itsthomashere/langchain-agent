@@ -23,6 +23,7 @@ def answer_question(query):
     st.write(sources)
     response = query_engine.query(query)
     st.write(response)
+    st.write(response.get_formatted_sources())
     # format title, page number and score as a string
     reference_list = []
     for node in response.source_nodes:
@@ -48,4 +49,4 @@ def answer_question(query):
     #     st.write(f"Score:\t {node.score:.3f}")
     # # print(response.get_formatted_sources())
 
-    return str(query_engine.query(query)) + str(reference_list)
+    return query_engine.query(query), reference_list
