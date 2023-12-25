@@ -61,12 +61,13 @@ if query := st.chat_input(
                 st.write(message)
 
     memory.chat_memory.add_user_message(query)
+    st.write(memory.chat_memory)
     st.session_state.messages.append(query)
     with st.chat_message(name="user"):
         st.write(query)
 
     response = agent_chain(query)
-    memory.chat_memory.add_user_message(response)
+    # memory.chat_memory.add_user_message(response)
     st.session_state.messages.append(response)
 
     with st.chat_message(name="assistant"):
