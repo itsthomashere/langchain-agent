@@ -24,13 +24,13 @@ def answer_question(query):
     response_text = response.get_response().response
     st.write(response_text)
     # st.write(response.source_nodes[0].get_content())
-    for node in response.source_nodes:
+    for i, node in response.source_nodes:
     #     print("-----")
     #     text_fmt = node.node.get_content().strip().replace("\n", " ")[:1000]
         # st.write(f"Text:\t {text_fmt} ...")
         # st.write(f"Metadata:\t {node.node.metadata}")
     #     # print out the page number and the metadata
-        st.write(f"`\nSource`:\t {node.node.metadata.get('title')}")
+        st.write(f"`\nSource {i}`:\t {node.node.metadata.get('title')}")
         st.write(f"`Page`:\t {node.node.metadata.get('page_number')}")
         st.write(f"`Relevance`:\t {node.score:.3f}")
     # # print(response.get_formatted_sources())
