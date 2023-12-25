@@ -28,11 +28,14 @@ def answer_question(query):
     reference_list = []
     for i, node in enumerate(response.source_nodes):
 
-        title = f"\n**Source {i+1}** {node.node.metadata.get('title')}"
+        title = f"\n**Title {i+1}** {node.node.metadata.get('title')}"
         page = f"**Page** {node.node.metadata.get('page_number')}"
         percentage = f"**Relevance** {node.score * 100:.1f}%"
         reference_list.append(f"{title}\n{page}\n{percentage}")
 
         st.toast(f"{title}\n{page}\n{percentage}", icon="ℹ️")
+    
+    # remove duplicates from reference list if the title is the same
+    reference_list = list(dict.fromkeys(reference_list))
 
-    return response_text + "\n\n" + "\n".join(reference_list)
+    return response_text + "\n\n" + " | ".join(reference_list)
