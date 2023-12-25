@@ -29,55 +29,54 @@ title = st.markdown(
 
 st.write("Provide me with overdose statistics related to first nations people in Canada.")
 
-# define LLM
-llm = ChatOpenAI(
-    temperature=0, 
-    model="gpt-4", 
-    max_tokens=1000, 
-    openai_api_key=st.secrets["OPENAI_API_KEY"]
+@st.cache_resource
+def llm_chain_response():
+    # define tools
+    tools = [
+    Tool(
+        name="Indigenous Narratives & Opioid Crisis Analyzer",
+        description=
+        "Useful for answering questions about the opioid crisis and First Nations communities.",
+        func=lambda q: str(answer_question(q)),
+        return_direct=True)
+        ]
+
+    # define prompt
+    prefix = """Have a conversation with a human, answering the following questions as best you can. You have access to the following tools:"""
+    suffix = """Begin!"
+
+    {chat_history}
+    Question: {input}
+    {agent_scratchpad}"""
+
+    prompt = ZeroShotAgent.create_prompt(
+        tools,
+        prefix=prefix,
+        suffix=suffix,
+        input_variables=["input", "chat_history", "agent_scratchpad"],
     )
 
-SYSTEM_PROMPT = """
-Your primary function is to serve as a knowledgeable assistant in the domain of the opioid crisis's impact on First Nations communities, the science of storytelling, and related research in North America. You are equipped with the 'Indigenous Narratives & Opioid Crisis Analyzer' tool. Your role is to provide accurate and relevant answers to user inquiries, drawing exclusively from a detailed corpus of research materials. It is imperative that your responses remain faithful to the content and context of the provided documents. Prioritize accuracy and relevance in all interactions.
+    # define LLM
+    llm = ChatOpenAI(
+        temperature=0, 
+        model="gpt-4", 
+        max_tokens=1000, 
+        openai_api_key=st.secrets["OPENAI_API_KEY"]
+        )
+    
+    # define memory
+    memory = ConversationBufferMemory(memory_key="chat_history")
 
-Previous conversation:
-{chat_history}
-
-New human question: {human_input}
-
-Response:"""
-
-# setup prompt
-prompt = PromptTemplate(
-    input_variables=["chat_history", "human_input"], template=SYSTEM_PROMPT
-)
+    # define agent
+    llm_chain = LLMChain(llm=llm, prompt=prompt)
+    agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=True)
+    agent_chain = AgentExecutor.from_agent_and_tools(
+        agent=agent, tools=tools, verbose=True, memory=memory
+    )
+    return agent_chain
 
 
-# define tools
-tools = [
-  Tool(
-    name="Indigenous Narratives & Opioid Crisis Analyzer",
-    description=
-    "Useful for answering questions about the opioid crisis and First Nations communities.",
-    func=lambda q: str(answer_question(q)),
-    return_direct=True)
-    ]
-
-prefix = """Have a conversation with a human, answering the following questions as best you can. You have access to the following tools:"""
-suffix = """Begin!"
-
-{chat_history}
-Question: {input}
-{agent_scratchpad}"""
-
-prompt = ZeroShotAgent.create_prompt(
-    tools,
-    prefix=prefix,
-    suffix=suffix,
-    input_variables=["input", "chat_history", "agent_scratchpad"],
-)
 # instantiate memory
-memory = ConversationBufferMemory(memory_key="chat_history")
 # memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 # conversation = LLMChain(
     # llm=llm,
@@ -88,11 +87,7 @@ memory = ConversationBufferMemory(memory_key="chat_history")
 # memory = ConversationBufferMemory(memory_key="chat_history")
 
 
-llm_chain = LLMChain(llm=llm, prompt=prompt)
-agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=True)
-agent_chain = AgentExecutor.from_agent_and_tools(
-    agent=agent, tools=tools, verbose=True, memory=memory
-)
+
 
 # initialize agent
 # agent_chain = initialize_agent(
@@ -118,7 +113,8 @@ if query := st.chat_input(
         if message["role"] != "system":
             display_message(message["role"], message["content"])
 
-    response = agent_chain.run(input=query)
+    llm_chain = llm_chain_response()
+    response = llm_chain.run(query)
     # response = agent_chain(query)
     append_message_to_session_state("assistant", response)
 
