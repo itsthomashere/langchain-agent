@@ -4,9 +4,12 @@ from llama_index.retrievers import VectorIndexRetriever
 
 
 # load knowledge base from disk.
-index = load_index_from_storage(
-    StorageContext.from_defaults(persist_dir="storage"))
-
+try:
+    index = load_index_from_storage(
+        StorageContext.from_defaults(persist_dir="storage"))
+except ValueError:
+    st.info("Please refresh the page.")
+    st.stop()
 # make the knowledge base into a query engine—an object that queries can be run on
 query_engine = index.as_query_engine(streaming=True)
 
