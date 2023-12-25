@@ -35,4 +35,4 @@ def answer_question(query):
         st.toast(f"{title}\n{page}\n{percentage}", icon="ℹ️")
 
 
-    return response_text + "\n\n" + f"{title}, page {page} at {percentage} relevance."
+    return response_text + "\n\n" + f"**{title}**, page {page} at {percentage} relevance."
