@@ -22,7 +22,7 @@ def answer_question(query):
     # st.write(retrieved_nodes)
     response = query_engine.query(query)
     st.write(response)
-    st.write(response.get_response())
+    st.write(response.get_response().response)
     # st.write(response.source_nodes[0].get_content())
     for node in response.source_nodes:
     #     print("-----")
