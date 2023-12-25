@@ -125,4 +125,4 @@ if query := st.chat_input(
     with st.chat_message(name="assistant"):
         # st.write(response["output"])
         st.write(response)
-        st.write(response["agent_scratchpad"])
+        # st.write(response["agent_scratchpad"])
