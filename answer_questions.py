@@ -24,11 +24,14 @@ def answer_question(query):
     # st.write(response)
     st.write(response.get_response().response)
     # st.write(response.source_nodes[0].get_content())
-    for node in response.source_nodes:
+    for i, node in response.source_nodes:
         title = node.node.metadata.get('title')
         page = node.node.metadata.get('page_number')
         score = node.score
-        st.write(f"\nSource: {title}, page {page}, relevance {score*100:.2f}%")
+        st.write(f"\n`Source` {i}: {title}")
+        st.write(f"`Page` {page}")
+        st.write(f"`Relevance`: {score*100:.2f}%")
+
     #     print("-----")
     #     text_fmt = node.node.get_content().strip().replace("\n", " ")[:1000]
         # st.write(f"Text:\t {text_fmt} ...")
