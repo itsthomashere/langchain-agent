@@ -150,7 +150,8 @@ if query := st.chat_input(
     llm_chain = llm_chain_response()
 
     try:
-        response = llm_chain.run(query)
+        with st.spinner("Thinking..."):
+            response = llm_chain.run(query)
     except ValueError as e:
         st.info("Minor hiccup. Please refresh the page.", icon="♻️")
         st.warning(e)
