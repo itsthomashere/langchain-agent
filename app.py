@@ -38,6 +38,12 @@ def llm_chain_response():
         description=
         "Useful for answering questions about the opioid crisis and First Nations communities.",
         func=lambda q: str(answer_question(q)),
+        return_direct=True),
+    Tool(
+        name="Science of Storytelling Explorer",
+        description=
+        "Designed to delve into the art and science behind effective storytelling. This tool is perfect for understanding the psychological, cultural, and neurological aspects of storytelling. Whether you're a writer, marketer, educator, or curious mind, use this to explore how stories influence, engage, and inspire us across various contexts.",
+        func=lambda q: str(answer_question(q)),
         return_direct=True)
         ]
 
