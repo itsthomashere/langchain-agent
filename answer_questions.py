@@ -24,15 +24,18 @@ def answer_question(query):
     response = query_engine.query(query)
     st.write(response)
     # format title, page number and score as a string
-    references = """
-    title: {node.node.metadata.get('title')}
-    page: {node.node.metadata.get('page_number')}
-    score: {node.score:.3f}
-    """
+    reference_list = []
     for node in response.source_nodes:
-        st.write(f"Title:\t {node.node.metadata.get('title')}")
-        st.write(f"Page:\t {node.node.metadata.get('page_number')}")
-        st.write(f"Score:\t {node.score:.3f}")
+
+        references = f"""
+        title: {node.node.metadata.get('title')}
+        page: {node.node.metadata.get('page_number')}
+        score: {node.score:.3f}
+        """
+        reference_list.append(references)
+        # st.write(f"Title:\t {node.node.metadata.get('title')}")
+        # st.write(f"Page:\t {node.node.metadata.get('page_number')}")
+        # st.write(f"Score:\t {node.score:.3f}")
 
     # for node in response.source_nodes:
     #     print("-----")
@@ -45,4 +48,4 @@ def answer_question(query):
     #     st.write(f"Score:\t {node.score:.3f}")
     # # print(response.get_formatted_sources())
 
-    return str(query_engine.query(query)) + references
+    return str(query_engine.query(query)) + str(reference_list)
