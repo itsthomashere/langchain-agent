@@ -75,7 +75,7 @@ def llm_chain_response():
     llm_chain = LLMChain(llm=llm, prompt=prompt)
     agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=True)
     return AgentExecutor.from_agent_and_tools(
-        agent=agent, tools=tools, verbose=True, memory=memory
+        agent=agent, tools=tools, verbose=True, handle_parsing_errors=True, memory=memory
     )
 
 
