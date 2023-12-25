@@ -7,6 +7,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+llama-index = "^0.9.21"
+langchain = "^0.0.352"
+streamlit = "^1.29.0"
+openai = "^1.6.1"
+streamlit-option-menu = "^0.3.6"
+sqlalchemy = "^2.0.23"
+psycopg2-binary = "^2.9.9"
 
 
 [build-system]
