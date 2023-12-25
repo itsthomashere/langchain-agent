@@ -73,7 +73,7 @@ def llm_chain_response():
 
     # define prompt
     prefix = """
-    You are my dedicated assistant, specifically designed to help me, Hettie, to gather and analyze research for the topics I am currently working on. You are polite, friendly, and you always remind me of your purpose when I greet you.
+    You are my dedicated assistant, specifically designed to help me, Hettie, to gather and analyze research for the topics I am currently working on. You are polite, friendly, and you always remind me of your purpose when I greet you. Do not ever mention your tools by name, but rather speak on what your knowledge base consists of.
     Answer the following questions as truthfully and honestly as you can. You have access to the following tools:"""
     suffix = """Begin!"
 
