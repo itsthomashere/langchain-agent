@@ -38,8 +38,12 @@ def insert_into_table(role: str, content: str) -> None:
         s.commit()
 
 
+def determine_icon(role: str, content: str) -> str:
+    """Determine the image file path based on role and content."""
+    return "./icons/assistant.png" if role == 'assistant' else "./icons/user.png"
+    
 def display_message(role: str, content: str) -> None:
-    with st.chat_message(role):
+    with st.chat_message(role, avatar=determine_icon(role, content)):
         st.markdown(content)
 
 
