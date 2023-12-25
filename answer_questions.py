@@ -27,7 +27,7 @@ def answer_question(query):
     response_text = response.get_response().response
     st.write(response_text)
     # st.write(response.source_nodes[0].get_content())
-    for i, node in response.source_nodes:
+    for i, node in enumerate(response.source_nodes):
     #     print("-----")
     #     text_fmt = node.node.get_content().strip().replace("\n", " ")[:1000]
         # st.write(f"Text:\t {text_fmt} ...")
