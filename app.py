@@ -13,7 +13,7 @@ from sqlalchemy import create_engine, text
 
 def connect_to_table() -> None:
     """Create 'messages' table in the database."""
-    conn = st.experimental_connection("digitalocean", type="sql")
+    conn = st.connection("digitalocean", type="sql")
     with conn.session as s:
         # Create the 'messages' table with timestamp, role, and content columns
         s.execute(text("""
@@ -26,7 +26,7 @@ def connect_to_table() -> None:
 
 def insert_into_table(role: str, content: str) -> None:
     """Save message data to the 'messages' table."""
-    conn = st.experimental_connection("digitalocean", type="sql")
+    conn = st.connection("digitalocean", type="sql")
     
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with conn.session as s:
