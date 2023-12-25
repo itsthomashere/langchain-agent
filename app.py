@@ -1,7 +1,7 @@
 import streamlit as st
 
 from langchain.chat_models import ChatOpenAI
-from langchain.agents import Tool, initialize_agent
+from langchain.agents import Tool, initialize_agent, AgentExecutor, ZeroShotAgent
 from langchain.prompts import PromptTemplate
 
 from langchain.chains import LLMChain
@@ -58,11 +58,24 @@ tools = [
   Tool(
     name="Indigenous Narratives & Opioid Crisis Analyzer",
     description=
-    "Specialized for insights into the disproportionate impact of the opioid crisis on First Nations communities, the science of storytelling, and related research in Canada and America. This tool distills answers from a vast collection of PDFs and texts, focusing predominantly on First Nations narratives and opioid-related studies. Provide a comprehensive question for targeted summaries from your extensive body of research material.",
+    "Useful for answering questions about the opioid crisis and First Nations communities.",
     func=lambda q: str(answer_question(q)),
     return_direct=True)
     ]
 
+prefix = """Have a conversation with a human, answering the following questions as best you can. You have access to the following tools:"""
+suffix = """Begin!"
+
+{chat_history}
+Question: {input}
+{agent_scratchpad}"""
+
+prompt = ZeroShotAgent.create_prompt(
+    tools,
+    prefix=prefix,
+    suffix=suffix,
+    input_variables=["input", "chat_history", "agent_scratchpad"],
+)
 # instantiate memory
 memory = ConversationBufferMemory(memory_key="chat_history")
 # memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -75,15 +88,21 @@ memory = ConversationBufferMemory(memory_key="chat_history")
 # memory = ConversationBufferMemory(memory_key="chat_history")
 
 
-# initialize agent
-agent_chain = initialize_agent(
-    tools,
-    llm,
-    agent="conversational-react-description",
-    memory=memory,
-    verbose=True,
-    prompt=prompt
+llm_chain = LLMChain(llm=llm, prompt=prompt)
+agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=True)
+agent_chain = AgentExecutor.from_agent_and_tools(
+    agent=agent, tools=tools, verbose=True, memory=memory
 )
+
+# initialize agent
+# agent_chain = initialize_agent(
+#     tools,
+#     llm,
+#     agent="conversational-react-description",
+#     memory=memory,
+#     verbose=True,
+#     prompt=prompt
+# )
 
 
 if query := st.chat_input(
@@ -99,8 +118,11 @@ if query := st.chat_input(
         if message["role"] != "system":
             display_message(message["role"], message["content"])
 
-    response = agent_chain(query)
+    response = agent_chain.run(input=query)
+    # response = agent_chain(query)
     append_message_to_session_state("assistant", response["output"])
 
     with st.chat_message(name="assistant"):
-        st.write(response["output"])
+        # st.write(response["output"])
+        st.write(response)
+        st.write(response["agent_scratchpad"])
