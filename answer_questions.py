@@ -16,10 +16,37 @@ index=index,
 similarity_top_k=5  # Modify this value to change top K retrievals
 )
 
+def extract_info(node):
+    """Extracts the content, title, and page number from a node."""
+    content = node.get('text', 'No content available')
+    metadata = node.get('metadata', {})
+    title = metadata.get('title', 'No title')
+    page_number = metadata.get('page_number', 'No page number')
+    return content, title, page_number
+
+def print_info(nodes):
+    """Prints the content, title, and page number for each node in the list."""
+    for index, node in enumerate(nodes):
+        content, title, page_number = extract_info(node.get('node', {}))
+        print(f"Item {index}:")
+        print(f"Title: {title}")
+        print(f"Page Number: {page_number}")
+        print("Content:")
+        print(content)
+        print("\n")
+
 def answer_question(query):
     """Run a query on the query engine."""
-    retrieved_nodes = retriever.retrieve(query)
-    st.write(retrieved_nodes)
+    nodes = retriever.retrieve(query)
+    for index, node in enumerate(nodes):
+        content, title, page_number = extract_info(node.get('node', {}))
+        st.write(f"Item {index}:")
+        st.write(f"Title: {title}")
+        st.write(f"Page Number: {page_number}")
+        st.write("Content:")
+        st.write(content)
+        st.write("\n") 
+
     response = query_engine.query(query)
     st.write(response)
     st.write(response.source_nodes[0].get_content())
