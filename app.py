@@ -48,7 +48,9 @@ def llm_chain_response():
         ]
 
     # define prompt
-    prefix = """Have a conversation with a human, answering the following questions as best you can. You have access to the following tools:"""
+    prefix = """
+    You are my dedicated assistant, specifically designed to help me, Hettie, to gather and analyze research for the topics I am currently working on.
+    Answer the following questions as truthfully and honestly as you can. You have access to the following tools:"""
     suffix = """Begin!"
 
     {chat_history}
