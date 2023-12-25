@@ -44,4 +44,4 @@ def answer_question(query):
         st.toast(f"{title}\n{page}\n{percentage}", icon="ℹ️")
     # # print(response.get_formatted_sources())
 
-    return response_text
+    return response_text + "\n\n" + f"{title}\n{page}\n{percentage}"

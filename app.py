@@ -25,17 +25,22 @@ def llm_chain_response():
     # define tools
     tools = [
     Tool(
-        name="Indigenous Narratives & Opioid Crisis Analyzer",
-        description=
-        "Useful for answering questions about the opioid crisis and First Nations communities.",
+        name="first nations people and the opioid crisis",
+        description="Useful for finding solutions to the opioid health threat among Canadian youth and first nations people.",
         func=lambda q: str(answer_question(q)),
         return_direct=True),
     Tool(
-        name="Science of Storytelling Explorer",
+        name="The science behind storytelling",
         description=
         "Designed to delve into the art and science behind effective storytelling. This tool is perfect for understanding the psychological, cultural, and neurological aspects of storytelling. Whether you're a writer, marketer, educator, or curious mind, use this to explore how stories influence, engage, and inspire us across various contexts.",
         func=lambda q: str(answer_question(q)),
-        return_direct=True)
+        return_direct=True),
+    Tool(
+        name="7 Generations and Indigenous Care",
+        description=
+        "This tool is dedicated to exploring integrated healthcare services for Indigenous communities.",
+        func=lambda q: str(answer_question(q)),
+        return_direct=True),
         ]
 
     # define prompt
