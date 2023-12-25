@@ -19,34 +19,19 @@ similarity_top_k=5  # Modify this value to change top K retrievals
 def answer_question(query):
     """Run a query on the query engine."""
     retrieved_nodes = retriever.retrieve(query)
-    sources = [node.metadata.get('document_id') for node in retrieved_nodes]
-    st.write(sources)
+    st.write(retrieved_nodes)
     response = query_engine.query(query)
     st.write(response)
-    st.write(response.get_formatted_sources())
-    # format title, page number and score as a string
-    reference_list = []
+    st.write(response.source_nodes[0].get_content())
     for node in response.source_nodes:
-
-        references = f"""
-        title: {node.node.metadata.get('title')}
-        page: {node.node.metadata.get('page_number')}
-        score: {node.score:.3f}
-        """
-        reference_list.append(references)
-        # st.write(f"Title:\t {node.node.metadata.get('title')}")
-        # st.write(f"Page:\t {node.node.metadata.get('page_number')}")
-        # st.write(f"Score:\t {node.score:.3f}")
-
-    # for node in response.source_nodes:
     #     print("-----")
     #     text_fmt = node.node.get_content().strip().replace("\n", " ")[:1000]
-    #     # print(f"Text:\t {text_fmt} ...")
-    #     # print(f"Metadata:\t {node.node.metadata}")
+        st.write(f"Text:\t {text_fmt} ...")
+        st.write(f"Metadata:\t {node.node.metadata}")
     #     # print out the page number and the metadata
-    #     st.write(f"Title:\t {node.node.metadata.get('title')}")
-    #     st.write(f"Page:\t {node.node.metadata.get('page_number')}")
-    #     st.write(f"Score:\t {node.score:.3f}")
+        st.write(f"Title:\t {node.node.metadata.get('title')}")
+        st.write(f"Page:\t {node.node.metadata.get('page_number')}")
+        st.write(f"Score:\t {node.score:.3f}")
     # # print(response.get_formatted_sources())
 
-    return query_engine.query(query), reference_list
+    # return query_engine.query(query), reference_list
