@@ -108,7 +108,7 @@ title = st.markdown(
 
 
 if query := st.chat_input(
-    "Ask a question about the opioid crisis and First Nations communities."
+    "Send a message:"
 ):
     append_message_to_session_state("user", query)
 
