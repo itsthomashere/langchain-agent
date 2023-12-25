@@ -34,9 +34,5 @@ def answer_question(query):
             reference_list.append(f"**{title}**: page {page} at {percentage} relevance")
         else:
             reference_list.append(f"page {page} at {percentage} relevance.")
-        # reference_list.append(f"{title}\n{page}\n{percentage}")
-
-        # st.toast(f"{title}\npage {page}\n{percentage}% relevant", icon="ℹ️")
-
 
     return response_text + "\n\n" + ", ".join(reference_list)
