@@ -39,4 +39,4 @@ def answer_question(query):
     #     st.write(f"Score:\t {node.score:.3f}")
     # # print(response.get_formatted_sources())
 
-    return query_engine.query(query)
+    return query_engine.query(query).output
